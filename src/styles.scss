@@ -22,6 +22,18 @@ $--font-weight-primary: 400;
   }
 }
 
+.el-header {
+  padding: 0 80px;
+}
+
+.el-main {
+  padding: 20px 80px;
+}
+
+.el-button {
+  text-transform: uppercase;
+}
+
 body {
   margin: 0;
   font-family: "Roboto", "Helvetica Neue",Helvetica,Arial,sans-serif;

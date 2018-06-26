@@ -55,14 +55,31 @@ export default {
     }
   },
 
+  created () {
+    if (localStorage.getItem('auth_url')) {
+      this.form.auth_url = localStorage.getItem('auth_url')
+    }
+
+    if (localStorage.getItem('func_url')) {
+      this.form.func_url = localStorage.getItem('func_url')
+    }
+  },
+
   methods: {
     submitForm () {
-      console.log('submited')
       this.$refs['signUpForm'].validate(valid => {
         if (valid) {
-          alert('It\' OK!')
-        } else {
-          console.log('Fields not filled!')
+          localStorage.setItem('auth_url', this.form.auth_url)
+          localStorage.setItem('func_url', this.form.func_url)
+
+          this.axios.post(this.form.auth_url + '?action=signup&userid=' + this.form.email + '&password=' + this.form.password, {
+            // action: 'signup',
+            // userid: this.form.email,
+            // password: this.form.password,
+            // city: this.form.city
+          }).then(response => {
+            console.log(response)
+          })
         }
       })
     }
