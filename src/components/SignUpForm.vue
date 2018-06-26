@@ -1,6 +1,6 @@
 <template>
   <div class="sign-up">
-    <el-form label-width="120px" ref="signUpForm" :model="form" :rules="rules" @submit.native.prevent="submitForm()">
+    <el-form label-width="120px" label-position="left" ref="signUpForm" :model="form" :rules="rules" @submit.native.prevent="submitForm()">
       <el-form-item label="Auth URL" prop="auth_url">
         <el-input placeholder="Auth function URL" type="text" v-model="form.auth_url"></el-input>
       </el-form-item>

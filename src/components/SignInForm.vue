@@ -1,6 +1,6 @@
 <template>
   <div class="sign-in">
-    <el-form label-width="120px" ref="signUpForm" :model="form" :rules="rules" @submit.native.prevent="submitForm()">
+    <el-form label-width="120px" label-position="left" ref="signUpForm" :model="form" :rules="rules" @submit.native.prevent="submitForm()">
       <el-form-item label="Auth URL" prop="auth_url">
         <el-input placeholder="Auth function URL" type="text" v-model="form.auth_url"></el-input>
       </el-form-item>
@@ -69,7 +69,7 @@ export default {
         if (valid) {
           localStorage.setItem('auth_url', this.form.auth_url)
           localStorage.setItem('func_url', this.form.func_url)
-          
+
           alert('It\' OK!')
         } else {
           console.log('Fields not filled!')
