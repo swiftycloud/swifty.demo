@@ -1,6 +1,6 @@
 <template>
   <div class="sign-in">
-    <el-form label-width="120px" label-position="left" ref="signUpForm" :model="form" :rules="rules" @submit.native.prevent="submitForm()">
+    <el-form label-width="120px" label-position="left" ref="signInForm" :model="form" :rules="rules" @submit.native.prevent="submitForm()">
       <el-form-item label="Auth URL" prop="auth_url">
         <el-input placeholder="Auth function URL" type="text" v-model="form.auth_url"></el-input>
       </el-form-item>
@@ -64,15 +64,32 @@ export default {
 
   methods: {
     submitForm () {
-      console.log('submited')
-      this.$refs['signUpForm'].validate(valid => {
+      this.$refs['signInForm'].validate(valid => {
         if (valid) {
           localStorage.setItem('auth_url', this.form.auth_url)
           localStorage.setItem('func_url', this.form.func_url)
 
-          alert('It\' OK!')
-        } else {
-          console.log('Fields not filled!')
+          this.axios.post(this.form.auth_url + '?action=signin&userid=' + this.form.email + '&password=' + this.form.password, {
+            // action: 'signup',
+            // userid: this.form.email,
+            // password: this.form.password,
+            // city: this.form.city
+          }).then(response => {
+            if ('error' in response.data) {
+              this.$notify.error({
+                title: 'Error',
+                message: response.data.error
+              });
+            } else {
+              this.$notify.success({
+                title: 'Success',
+                message: 'SignIn successful'
+              })
+
+              localStorage.setItem('token', response.data.token)
+              this.$router.push({ name: 'profile' })
+            }
+          })
         }
       })
     }

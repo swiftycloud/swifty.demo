@@ -72,13 +72,16 @@ export default {
           localStorage.setItem('auth_url', this.form.auth_url)
           localStorage.setItem('func_url', this.form.func_url)
 
-          this.axios.post(this.form.auth_url + '?action=signup&userid=' + this.form.email + '&password=' + this.form.password, {
+          this.axios.post(this.form.auth_url + '?action=signup&userid=' + this.form.email + '&password=' + this.form.password + '&city=' + this.form.city, {
             // action: 'signup',
             // userid: this.form.email,
             // password: this.form.password,
             // city: this.form.city
           }).then(response => {
-            console.log(response)
+            this.$notify.success({
+              title: 'Success',
+              message: 'SignUp successful'
+            })
           })
         }
       })
