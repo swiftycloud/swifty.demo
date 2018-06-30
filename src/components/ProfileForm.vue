@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="120px" label-position="left" ref="signUpForm" :model="form">
+  <el-form label-width="170px" label-position="left" ref="signUpForm" :model="form">
     <el-form-item label="User email">
       <el-input placeholder="Email" type="text" v-model="form.email"></el-input>
     </el-form-item>
@@ -9,8 +9,11 @@
     <el-form-item label="Auth URL">
       <el-input placeholder="Auth function URL" type="text" v-model="form.auth_url" disabled></el-input>
     </el-form-item>
-    <el-form-item label="Function URL">
-      <el-input placeholder="Profile management URL" type="text" v-model="form.func_url" disabled></el-input>
+    <el-form-item label="Profile Function URL">
+      <el-input placeholder="Profile management URL" type="text" v-model="form.profile_func_url" disabled></el-input>
+    </el-form-item>
+    <el-form-item label="Picture Function URL">
+      <el-input placeholder="Picture management URL" type="text" v-model="form.picture_func_url" disabled></el-input>
     </el-form-item>
     <el-form-item label="Picture">
       <el-upload
@@ -41,7 +44,10 @@ export default {
         auth_url: null,
         func_url: null,
         user_image: null
-      }
+      },
+
+      token: null,
+      func: null
     }
   },
 
@@ -50,15 +56,35 @@ export default {
       this.form.auth_url = localStorage.getItem('auth_url')
     }
 
-    if (localStorage.getItem('func_url')) {
-      this.form.func_url = localStorage.getItem('func_url')
+    if (localStorage.getItem('profile_func_url')) {
+      this.form.profile_func_url = localStorage.getItem('profile_func_url')
     }
+
+    if (localStorage.getItem('picture_func_url')) {
+      this.form.picture_func_url = localStorage.getItem('picture_func_url')
+    }
+
+    if (localStorage.getItem('token')) {
+      this.token = localStorage.getItem('token')
+    }
+
+    this.fetchUserInfo()
   },
 
   methods: {
+    fetchUserInfo () {
+      return this.axios.request({
+        url: this.form.profile_func_url + '?action=get',
+        headers: { 'Authorization': 'Bearer ' + this.token }
+      }).then(response => {
+        console.log(response)
+      })
+    },
+
     handleAvatarSuccess(res, file) {
       this.form.user_image = URL.createObjectURL(file.raw);
     },
+
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;

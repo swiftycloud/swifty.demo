@@ -1,11 +1,14 @@
 <template>
   <div class="sign-up">
-    <el-form label-width="120px" label-position="left" ref="signUpForm" :model="form" :rules="rules" @submit.native.prevent="submitForm()">
+    <el-form label-width="170px" label-position="left" ref="signUpForm" :model="form" :rules="rules" @submit.native.prevent="submitForm()">
       <el-form-item label="Auth URL" prop="auth_url">
         <el-input placeholder="Auth function URL" type="text" v-model="form.auth_url"></el-input>
       </el-form-item>
-      <el-form-item label="Function URL" prop="func_url">
-        <el-input placeholder="Profile management URL" type="text" v-model="form.func_url"></el-input>
+      <el-form-item label="Profile Function URL" prop="profile_func_url">
+        <el-input placeholder="Profile management URL" type="text" v-model="form.profile_func_url"></el-input>
+      </el-form-item>
+      <el-form-item label="Picture Function URL" prop="picture_func_url">
+        <el-input placeholder="Picture management URL" type="text" v-model="form.picture_func_url"></el-input>
       </el-form-item>
       <el-form-item label="Your email" prop="email">
         <el-input placeholder="Email" type="email" v-model="form.email"></el-input>
@@ -41,8 +44,11 @@ export default {
         auth_url: [
           { required: true, message: 'Please enter your auth url', trigger: 'blur' }
         ],
-        func_url: [
-          { required: true, message: 'Please enter your function url', trigger: 'blur' }
+        profile_func_url: [
+          { required: true, message: 'Please enter your profile function url', trigger: 'blur' }
+        ],
+        picture_func_url: [
+          { required: true, message: 'Please enter your picture function url', trigger: 'blur' }
         ],
         email: [
           { required: true, message: 'Please enter your email', trigger: 'blur' },
@@ -60,8 +66,12 @@ export default {
       this.form.auth_url = localStorage.getItem('auth_url')
     }
 
-    if (localStorage.getItem('func_url')) {
-      this.form.func_url = localStorage.getItem('func_url')
+    if (localStorage.getItem('profile_func_url')) {
+      this.form.profile_func_url = localStorage.getItem('profile_func_url')
+    }
+
+    if (localStorage.getItem('picture_func_url')) {
+      this.form.picture_func_url = localStorage.getItem('picture_func_url')
     }
   },
 
@@ -70,14 +80,15 @@ export default {
       this.$refs['signUpForm'].validate(valid => {
         if (valid) {
           localStorage.setItem('auth_url', this.form.auth_url)
-          localStorage.setItem('func_url', this.form.func_url)
+          localStorage.setItem('profile_func_url', this.form.profile_func_url)
+          localStorage.setItem('picture_func_url', this.form.picture_func_url)
 
           this.axios.post(this.form.auth_url + '?action=signup&userid=' + this.form.email + '&password=' + this.form.password + '&city=' + this.form.city, {
             // action: 'signup',
             // userid: this.form.email,
             // password: this.form.password,
             // city: this.form.city
-          }).then(response => {
+          }).then(() => {
             this.$notify.success({
               title: 'Success',
               message: 'SignUp successful'
