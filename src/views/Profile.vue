@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <el-row>
-      <el-col :span="7">
+      <el-col>
         <h2 class="header">Profile Management</h2>
 
         <profile-form></profile-form>
