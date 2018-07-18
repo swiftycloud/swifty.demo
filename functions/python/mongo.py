@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import os
 import swifty
 
-def main(req):
+def Main(req):
     db = swifty.MongoDatabase(req.args['dbname'])
     colname = req.args['collection']
     col = db[colname]

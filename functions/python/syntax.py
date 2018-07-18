@@ -1,2 +1,2 @@
-def main(args)
+def Main(args)
     return "hello world"

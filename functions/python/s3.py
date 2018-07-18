@@ -1,7 +1,7 @@
 import boto3
 import os
 
-def main(req):
+def Main(req):
     mwn = req.args['bucket'].upper()
     addr = os.getenv('MWARE_' + mwn + '_ADDR')
     akey = os.getenv('MWARE_' + mwn + '_S3KEY')

@@ -2,7 +2,7 @@ import pymysql.cursors
 import os
 import swifty
 
-def main(req):
+def Main(req):
     db = swifty.MariaConn(req.args['dbname'])
     res = "invalid"
     with db.cursor() as cursor:

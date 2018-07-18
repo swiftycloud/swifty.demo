@@ -18,7 +18,7 @@ def gcon(req):
         print("Reuse connection")
     return dbconn
 
-def main(req.args):
+def Main(req.args):
     db = gcon(req.args)
     res = "invalid"
     if req.args['action'] == 'create':
