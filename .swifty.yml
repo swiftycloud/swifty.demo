@@ -1,0 +1,7 @@
+---
+desc: "Swifty DEMO functions"
+files:
+        - name: "Hello world"
+          path: "functions/golang/helloworld.go"
+          lang: "golang"
+          desc: "A hello-world example"
