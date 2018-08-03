@@ -5,3 +5,7 @@ files:
           path: "functions/golang/helloworld.go"
           lang: "golang"
           desc: "A hello-world example"
+        - name: "Telegram chatbot on Python"
+          path: "functions/python/telegram_bot.go"
+          lang: "python"
+          desc: "Simple chatbpt for Telegram written on Python."
