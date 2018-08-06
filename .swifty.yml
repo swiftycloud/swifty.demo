@@ -8,4 +8,4 @@ files:
         - name: "Telegram chatbot on Python"
           path: "functions/python/telegram_bot.py"
           lang: "python"
-          desc: "Simple chatbpt for Telegram written on Python."
+          desc: "Simple chatbot for Telegram written on Python."
