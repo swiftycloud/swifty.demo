@@ -28,6 +28,11 @@
         <i v-else class="el-icon-plus picture-uploader-icon"></i>
       </el-upload>
     </el-form-item>
+
+    <el-form-item label="Facebook">
+      <el-button type="success" plain @click="connectFacebook" v-if="!form.facebook">Connect</el-button>
+      <el-button type="danger" plain @click="disconnectFacebook" v-if="form.facebook">Disconnect</el-button>
+    </el-form-item>
     
     <div class="sw-form-actions">
       <button type="submit" style="display: none"></button>
@@ -37,12 +42,16 @@
 </template>
 
 <script>
+import * as config from '@/config'
+
 export default {
   data () {
     return {
       form: {
         email: null,
-        city: null
+        city: null,
+        cookie: null,
+        facebook: null,
       },
 
       user_image: null
@@ -52,13 +61,23 @@ export default {
   created () {
     this.fetchProfile()
     this.fetchPicture()
+
+    if ('code' in this.$route.query) {
+      this.$store.dispatch('connectFacebook', {
+        code: this.$route.query.code,
+        redirect_uri: encodeURIComponent(window.location.origin + window.location.pathname)
+      }).then(() => {
+        return this.fetchProfile()
+      }).then(() => {
+        this.$router.push({ name: 'profile' })
+      })
+    }
   },
 
   methods: {
     fetchProfile () {
       return this.$store.dispatch('getProfile').then(response => {
-        this.form.email = response.data.email
-        this.form.city = response.data.city
+        this.form = response.data
       })
     },
 
@@ -72,7 +91,7 @@ export default {
       return this.$store.dispatch('updateProfile', {
         email: this.form.email,
         city: this.form.city
-      }).then(response => {
+      }).then(() => {
         this.$notify.success({
           title: 'Success',
           message: 'Profile updated'
@@ -87,13 +106,9 @@ export default {
         reader.readAsDataURL(file)
 
         reader.onload = () => {
-          this.$store.dispatch('uploadPicture', reader.result.replace(/^data:image\/(.+);base64,/, '')).then(response => {
+          this.$store.dispatch('uploadPicture', reader.result.replace(/^data:image\/(.+);base64,/, '')).then(() => {
             this.user_image = reader.result
           })
-        }
-
-        reader.onerror = function (error) {
-          console.log('Error: ', error);
         }
       })
     },
@@ -110,6 +125,19 @@ export default {
       }
 
       return isLt2M;
+    },
+
+    connectFacebook () {
+      const redirect_uri = encodeURIComponent(window.location.origin + window.location.pathname)
+      const url = 'https://www.facebook.com/v3.0/dialog/oauth?client_id=' + config.FACEBOOK_CLIENT_ID + '&redirect_uri=' + redirect_uri
+
+      window.location.href = url
+    },
+
+    disconnectFacebook () {
+      this.$store.dispatch('disconnectFacebook', this.$route.query).then(() => {
+        this.fetchProfile()
+      })
     }
   }
 }

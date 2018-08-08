@@ -64,6 +64,23 @@ export default new Vuex.Store({
       })
     },
 
+    connectFacebook ({ state }, { code }) {
+      return axios.put(state.profile_endpoint, {
+        facebook: 1,
+        code: code
+      }, {
+        headers: { 'Authorization': 'Bearer ' + state.token }
+      })
+    },
+
+    disconnectFacebook ({ state }) {
+      return axios.put(state.profile_endpoint, {
+        facebook: 0
+      }, {
+        headers: { 'Authorization': 'Bearer ' + state.token }
+      })
+    },
+
     getPicture ({ state }) {
       return axios.get(state.picture_endpoint, {
         headers: { 'Authorization': 'Bearer ' + state.token }
