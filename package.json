@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "blueimp-md5": "^2.10.0",
     "element-ui": "^2.3.6",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",

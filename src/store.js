@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import md5 from 'blueimp-md5'
 import createPersistedState from "vuex-persistedstate"
 
 Vue.use(Vuex)
@@ -39,11 +40,11 @@ export default new Vuex.Store({
 
   actions: {
     signUp ({ state }, { email, password }) {
-      return axios.post(state.auth_endpoint + '/signup?userid=' + email + '&password=' + password)
+      return axios.post(state.auth_endpoint + '/signup?userid=' + email + '&password=' + md5(password))
     },
 
     signIn ({ state }, { email, password }) {
-      return axios.post(state.auth_endpoint + '/signin?userid=' + email + '&password=' + password)
+      return axios.post(state.auth_endpoint + '/signin?userid=' + email + '&password=' + md5(password))
     },
 
     createProfile ({ state }, payload) {
