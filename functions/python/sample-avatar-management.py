@@ -41,7 +41,7 @@ def Main(req):
     asec = os.getenv('MWARE_S3IMAGES_SECRET')
 
     s3 = boto3.session.Session().client(service_name = 's3',
-            aws_access_key_id = akey, aws_secret_access_key = asec, endpoint_url = 'http://' + addr + '/')
+            aws_access_key_id = akey, aws_secret_access_key = asec, endpoint_url = 'https://' + addr + '/')
 
     if req.method == 'POST':
         body = base64.b64decode(req.body)
