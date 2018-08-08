@@ -29,3 +29,7 @@ files:
           path: "functions/golang/simple-profile-mgmt.go"
           lang: "golang"
           desc: "How to manage user profiles: create, update, delete, storing in Mongo."
+        - name: "TODO application"
+          path: "functions/python/todo-app.py"
+          lang: "python"
+          desc: "Sample TODO app with the ability to add/del, list and modify simple TODO entries"
