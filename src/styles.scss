@@ -244,7 +244,7 @@ body {
     }
   }
 
-  .tasks-list {    
+  .tasks-list {
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
     border: 1px solid #e4e7ed;
     border-radius: 4px;
@@ -269,6 +269,13 @@ body {
         &.checked {
           color: #67c23a;
         }
+      }
+
+      .tasks-item-delete {
+        font-size: 16px;
+        outline: none;
+        margin-right: 15px;
+        color: #dcdfe6;
       }
 
       .tasks-item__name {

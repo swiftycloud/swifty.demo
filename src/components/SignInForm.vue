@@ -19,7 +19,7 @@
       <el-form-item label="Password" prop="password">
         <el-input placeholder="Password" type="password" v-model="form.password"></el-input>
       </el-form-item>
-      
+
       <div class="sw-form-actions">
         <button type="submit" style="display: none"></button>
         <el-button type="primary" @click="submitForm">Sign In</el-button>
@@ -124,7 +124,7 @@ export default {
             } else {
               this.$notify.success({ title: 'Success',message: 'SignIn successful' })
               this.$store.commit('updateToken', response.data.token)
-              this.$router.push({ name: 'profile' })
+              this.$router.push({ name: 'tasks' })
             }
           })
         }

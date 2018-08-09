@@ -16,7 +16,7 @@
           <el-button size="mini" @click="filter = 'done'" :class="{ active: filter === 'done' }">Completed</el-button>
           <el-button size="mini" @click="filter = 'new'" :class="{ active: filter === 'new' }">Active</el-button>
         </div>
-        
+
         <div class="tasks-form">
           <input type="text" @keyup.enter="addTask" v-model="task" placeholder="Enter your task here" class="tasks-input">
           <a href="#" class="tasks-button" @click.prevent.stop="addTask">
@@ -33,6 +33,9 @@
               <i class="el-icon-circle-check-outline"></i>
             </span>
             <span class="tasks-item__name">{{ task.task }}</span>
+            <a href="#" class="tasks-item-delete" @click.prevent.stop="deleteTask(task)">
+              <i class="el-icon-delete"></i>
+            </a>
           </li>
         </ul>
       </el-col>
@@ -86,6 +89,12 @@ export default {
 
     doneTask (task) {
       this.$store.dispatch('doneTask', task.id).then(() => {
+        this.fetchTasks()
+      })
+    },
+
+    deleteTask (task) {
+      this.$store.dispatch('deleteTask', task.id).then(() => {
         this.fetchTasks()
       })
     }

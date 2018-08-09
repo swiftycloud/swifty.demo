@@ -106,6 +106,12 @@ export default new Vuex.Store({
       })
     },
 
+    deleteTask ({ state }, task_id) {
+      return axios.delete(state.tasks_endpoint + '/tasks/' + task_id, {
+        headers: { 'Authorization': 'Bearer ' + state.token }
+      })
+    },
+
     doneTask ({ state }, task_id) {
       return axios.post(state.tasks_endpoint + '/tasks/' + task_id + '/done', {}, {
         headers: { 'Authorization': 'Bearer ' + state.token }
