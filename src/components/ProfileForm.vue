@@ -15,6 +15,9 @@
     <el-form-item label="Picture Function URL">
       <el-input placeholder="Picture management URL" type="text" v-model="$store.state.picture_endpoint" disabled></el-input>
     </el-form-item>
+    <el-form-item label="Tasks Function URL">
+      <el-input placeholder="Tasks management URL" type="text" v-model="$store.state.tasks_endpoint" disabled></el-input>
+    </el-form-item>
     <el-form-item label="Picture">
       <el-upload
         class="picture-uploader"
@@ -72,7 +75,7 @@ export default {
       return this.$store.dispatch('updateProfile', {
         email: this.form.email,
         city: this.form.city
-      }).then(response => {
+      }).then(() => {
         this.$notify.success({
           title: 'Success',
           message: 'Profile updated'
@@ -87,13 +90,9 @@ export default {
         reader.readAsDataURL(file)
 
         reader.onload = () => {
-          this.$store.dispatch('uploadPicture', reader.result.replace(/^data:image\/(.+);base64,/, '')).then(response => {
+          this.$store.dispatch('uploadPicture', reader.result.replace(/^data:image\/(.+);base64,/, '')).then(() => {
             this.user_image = reader.result
           })
-        }
-
-        reader.onerror = function (error) {
-          console.log('Error: ', error);
         }
       })
     },

@@ -13,7 +13,8 @@ export default new Vuex.Store({
     token: null,
     auth_endpoint: null,
     profile_endpoint: null,
-    picture_endpoint: null
+    picture_endpoint: null,
+    tasks_endpoint: null
   },
 
   mutations: {
@@ -31,6 +32,10 @@ export default new Vuex.Store({
 
     updatePictureEndpoint (state, value) {
       state.picture_endpoint = value
+    },
+
+    updateTasksEndpoint (state, value) {
+      state.tasks_endpoint = value
     },
 
     clearToken (state) {
@@ -82,6 +87,27 @@ export default new Vuex.Store({
 
     deletePicture ({ state }) {
       return axios.delete(state.picture_endpoint, {
+        headers: { 'Authorization': 'Bearer ' + state.token }
+      })
+    },
+
+    getTasks ({ state }, filter) {
+      let url = state.tasks_endpoint + '/tasks'
+      url = filter !== 'all' ? url + '?status=' + filter : url
+
+      return axios.get(url, {
+        headers: { 'Authorization': 'Bearer ' + state.token }
+      })
+    },
+
+    addTask ({ state }, task) {
+      return axios.post(state.tasks_endpoint + '/tasks', task, {
+        headers: { 'Authorization': 'Bearer ' + state.token }
+      })
+    },
+
+    doneTask ({ state }, task_id) {
+      return axios.post(state.tasks_endpoint + '/tasks/' + task_id + '/done', {}, {
         headers: { 'Authorization': 'Bearer ' + state.token }
       })
     }

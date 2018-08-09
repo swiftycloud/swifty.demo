@@ -2,7 +2,10 @@
   <div class="profile">
     <el-row>
       <el-col>
-        <h2 class="header">Profile Management</h2>
+        <el-tabs v-model="activeTabName">
+          <el-tab-pane label="TASKS" name="tasks"></el-tab-pane>
+          <el-tab-pane label="PROFILE" name="profile"></el-tab-pane>
+        </el-tabs>
 
         <profile-form></profile-form>
       </el-col>
@@ -15,6 +18,18 @@ import ProfileForm from '@/components/ProfileForm.vue'
 
 export default {
   components: { ProfileForm },
+
+  data () {
+    return {
+      activeTabName: 'profile'
+    }
+  },
+
+  watch: {
+    activeTabName (val) {
+      this.$router.push({ name: 'tasks' })
+    }
+  },
 
   created () {
     if (this.$store.state.token === null) {
