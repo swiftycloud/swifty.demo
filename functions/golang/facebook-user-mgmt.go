@@ -1,13 +1,30 @@
 /*
  * Facebook account management for swifty Auth-as-a-Service
+ * This function needs some mware and env setup:
+ * - env:
+ *      SWIFTY_AUTH_NAME=<name>
+ * - mw:
+ *      type:   mongo
+ *      name:   <name>_mgo
+ * - mw:
+ *      type:   authjwt
+ *      name:   <name>_jwt
+ * - account:
+ *      type:   facebook
+ *      name:   <name>
+ *      client: <client_id>
+ *      secret: <secret_id>
  */
 
 package main
 
 import (
+	"os"
 	"fmt"
 	"swifty"
+	"strings"
 	"net/http"
+	"io/ioutil"
 	"encoding/json"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -25,7 +42,7 @@ func doFacebookReq(url string) (map[string]string, error) {
 		return nil, err
 	}
 
-	tok, err := ioutil.ReadAll(res.Body)
+	ts, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
 	if err != nil {
 		fmt.Printf("Error reading resp body: %s", err.Error())
@@ -34,7 +51,7 @@ func doFacebookReq(url string) (map[string]string, error) {
 
 	var tok map[string]string
 
-	err := json.Unmarshal(tok)
+	err = json.Unmarshal(ts, &tok)
 	if err != nil {
 		fmt.Printf("Error unmarshalling resp: %s", err.Error())
 		return nil, err
@@ -44,9 +61,10 @@ func doFacebookReq(url string) (map[string]string, error) {
 }
 
 func getCredsFromFacebook(args map[string]string) (string, error) {
-	url := "https://graph.facebook.com/v3.0/oauth/access_token"?
-	url += "?client_id=" + os.Getenv("ACC_FACEBOOKAAAS_CLIENT")
-	url += "&client_secret=" + os.Getenv("ACC_FACEBOOKAAAS_SECRET")
+	n := strings.ToUpper(os.Getenv("SWIFTY_AUTH_NAME"))
+	url := "https://graph.facebook.com/v3.0/oauth/access_token"
+	url += "?client_id=" + os.Getenv("ACC_FACEBOOK" + n + "_CLIENT")
+	url += "&client_secret=" + os.Getenv("ACC_FACEBOOK" + n + "_SECRET")
 	url += "&code=" + args["code"]
 	url += "&redirect_uri=" + args["redirect_uri"]
 
@@ -87,7 +105,7 @@ func doSignin(auth *swifty.AuthCtx, args map[string]string) interface{} {
 
 	var urec map[string]interface{}
 
-	err := auth.UsersCol.Find(bson.M{"facebookid": fbid}).One(&urec)
+	err = auth.UsersCol.Find(bson.M{"facebookid": fbid}).One(&urec)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &authResp{Error: "Invalid credentials"}
