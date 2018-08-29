@@ -83,34 +83,25 @@ func getCredsFromFacebook(args map[string]string) (string, error) {
 	return usr["id"], nil
 }
 
-func doSignup(auth *swifty.AuthCtx, args map[string]string) interface{} {
-	fbid, err := getCredsFromFacebook(args)
-	if err != nil {
-		return &authResp{Error: "Error talking to facebook"}
-	}
-	err = auth.UsersCol.Insert(bson.M{ "facebookid": fbid })
-	if err != nil {
-		fmt.Printf("Error inserting: %s", err.Error())
-		return &authResp{Error: "Error registering"}
-	}
-
-	return &authResp{}
-}
-
 func doSignin(auth *swifty.AuthCtx, args map[string]string) interface{} {
 	fbid, err := getCredsFromFacebook(args)
 	if err != nil {
 		return &authResp{Error: "Error talking to facebook"}
 	}
 
-	var urec map[string]interface{}
+	urec := make(map[string]interface{})
+	urec["facebookid"] = fbid
+	/* XXX Set additional facebbok data here */
 
-	err = auth.UsersCol.Find(bson.M{"facebookid": fbid}).One(&urec)
+	chg := mgo.Change{
+		Upsert: true,
+		Remove: false,
+		Update: bson.M { "$setOnInsert": urec },
+		ReturnNew: true,
+	}
+
+	_, err = auth.UsersCol.Find(bson.M{"facebookid": fbid}).Apply(chg, &urec)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			return &authResp{Error: "Invalid credentials"}
-		}
-
 		fmt.Printf("Error signing up: %s", err.Error())
 		return &authResp{Error: "Error signing in"}
 	}
@@ -125,15 +116,12 @@ func doSignin(auth *swifty.AuthCtx, args map[string]string) interface{} {
 
 func Main(req *Request) (interface{}, *Responce) {
 	auth, err := swifty.AuthContext()
-
 	if err != nil {
 		fmt.Println(err)
 		panic("Can't get auth context")
 	}
 
 	switch req.Path {
-	case "signup":
-		return doSignup(auth, req.Args), nil
 	case "signin":
 		return doSignin(auth, req.Args), nil
 	}
