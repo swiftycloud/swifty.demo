@@ -61,25 +61,25 @@ func doFacebookReq(url string) (map[string]string, error) {
 }
 
 func getCredsFromFacebook(args map[string]string) (string, error) {
+	var url string
+
 	tok, ok := args["token"]
-	if ok {
-		goto got_token
+	if !ok {
+		n := strings.ToUpper(os.Getenv("SWIFTY_AUTH_NAME"))
+		url = "https://graph.facebook.com/v3.0/oauth/access_token"
+		url += "?client_id=" + os.Getenv("ACC_FACEBOOK" + n + "_CLIENT")
+		url += "&client_secret=" + os.Getenv("ACC_FACEBOOK" + n + "_SECRET")
+		url += "&code=" + args["code"]
+		url += "&redirect_uri=" + args["redirect_uri"]
+
+		toki, err := doFacebookReq(url)
+		if err != nil {
+			return "", err
+		}
+
+		tok = toki["access-token"]
 	}
 
-	n := strings.ToUpper(os.Getenv("SWIFTY_AUTH_NAME"))
-	url := "https://graph.facebook.com/v3.0/oauth/access_token"
-	url += "?client_id=" + os.Getenv("ACC_FACEBOOK" + n + "_CLIENT")
-	url += "&client_secret=" + os.Getenv("ACC_FACEBOOK" + n + "_SECRET")
-	url += "&code=" + args["code"]
-	url += "&redirect_uri=" + args["redirect_uri"]
-
-	toki, err := doFacebookReq(url)
-	if err != nil {
-		return "", err
-	}
-
-	tok = toki["access-token"]
-got_token:
 	url = "https://graph.facebook.com/v3.0/me"
 	url += "?access_token=" + tok
 	usr, err := doFacebookReq(url)
