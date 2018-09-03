@@ -23,7 +23,7 @@ files:
           desc: "A hello-world example"
         - name: "Avatar management"
           path: "functions/python/sample-avatar-management.py"
-          lang: "golang"
+          lang: "python"
           desc: "How to manage avatars: upload, download, delete, storing on S3."
         - name: "Profile management"
           path: "functions/golang/simple-profile-mgmt.go"
