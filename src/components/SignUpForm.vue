@@ -32,8 +32,6 @@
 </template>
 
 <script>
-import api from '@/plugins/api'
-
 export default {
   data () {
     return {
@@ -108,7 +106,7 @@ export default {
       },
       set (value) {
         this.form.tasks_endpoint = value
-        this.$store.commit('updatePictureEndpoint', value)
+        this.$store.commit('updateTasksEndpoint', value)
       }
     }
   },
@@ -141,7 +139,7 @@ export default {
                 city: this.form.city
               })
             }
-          }).then(response => {
+          }).then(() => {
             this.$router.push({ name: 'profile' })
           })
         }

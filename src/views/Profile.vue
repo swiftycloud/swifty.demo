@@ -27,7 +27,7 @@ export default {
 
   watch: {
     activeTabName (val) {
-      this.$router.push({ name: 'tasks' })
+      this.$router.push({ name: val })
     }
   },
 

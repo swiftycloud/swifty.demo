@@ -34,6 +34,11 @@
           </el-upload>
         </el-form-item>
 
+        <el-form-item label="Facebook">
+          <el-button type="success" plain @click="connectFacebook" v-if="!form.facebook">Connect</el-button>
+          <el-button type="danger" plain @click="disconnectFacebook" v-if="form.facebook">Disconnect</el-button>
+        </el-form-item>
+
         <div class="sw-form-actions">
           <button type="submit" style="display: none"></button>
           <el-button type="primary" @click="submitForm">Update profile</el-button>
