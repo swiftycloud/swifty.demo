@@ -10,13 +10,16 @@
       <el-form-item label="Picture Function URL" prop="picture_endpoint">
         <el-input placeholder="Picture management URL" type="text" v-model="picture_endpoint"></el-input>
       </el-form-item>
+      <el-form-item label="Tasks Function URL" prop="tasks_endpoint">
+        <el-input placeholder="Tasks management URL" type="text" v-model="tasks_endpoint"></el-input>
+      </el-form-item>
       <el-form-item label="Your email" prop="email">
         <el-input placeholder="Email" type="email" v-model="form.email"></el-input>
       </el-form-item>
       <el-form-item label="Password" prop="password">
         <el-input placeholder="Password" type="password" v-model="form.password"></el-input>
       </el-form-item>
-      
+
       <div class="sw-form-actions">
         <button type="submit" style="display: none"></button>
         <el-button type="primary" @click="submitForm">Sign In</el-button>
@@ -33,6 +36,7 @@ export default {
         auth_endpoint: null,
         profile_endpoint: null,
         picture_endpoint: null,
+        tasks_endpoint: null,
         email: null,
         password: null
       },
@@ -46,6 +50,9 @@ export default {
         ],
         picture_endpoint: [
           { required: true, message: 'Please enter your picture function url', trigger: 'blur' }
+        ],
+        tasks_endpoint: [
+          { required: true, message: 'Please enter your tasks function url', trigger: 'blur' }
         ],
         email: [
           { required: true, message: 'Please enter your email', trigger: 'blur' },
@@ -62,6 +69,7 @@ export default {
     this.form.auth_endpoint = this.auth_endpoint
     this.form.profile_endpoint = this.profile_endpoint
     this.form.picture_endpoint = this.picture_endpoint
+    this.form.tasks_endpoint = this.tasks_endpoint
   },
 
   computed: {
@@ -93,6 +101,16 @@ export default {
         this.form.picture_endpoint = value
         this.$store.commit('updatePictureEndpoint', value)
       }
+    },
+
+    tasks_endpoint: {
+      get () {
+        return this.$store.state.tasks_endpoint
+      },
+      set (value) {
+        this.form.tasks_endpoint = value
+        this.$store.commit('updateTasksEndpoint', value)
+      }
     }
   },
 
@@ -106,7 +124,7 @@ export default {
             } else {
               this.$notify.success({ title: 'Success',message: 'SignIn successful' })
               this.$store.commit('updateToken', response.data.token)
-              this.$router.push({ name: 'profile' })
+              this.$router.push({ name: 'tasks' })
             }
           })
         }
