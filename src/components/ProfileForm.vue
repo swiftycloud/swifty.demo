@@ -11,6 +11,9 @@
         <el-form-item label="Auth URL">
           <el-input placeholder="Auth function URL" type="text" v-model="$store.state.auth_endpoint" disabled></el-input>
         </el-form-item>
+        <el-form-item label="Facebook Auth URL">
+          <el-input placeholder="Facebook function URL" type="text" v-model="$store.state.facebook_endpoint" disabled></el-input>
+        </el-form-item>
         <el-form-item label="Profile Function URL">
           <el-input placeholder="Profile management URL" type="text" v-model="$store.state.profile_endpoint" disabled></el-input>
         </el-form-item>
@@ -34,10 +37,10 @@
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="Facebook">
+        <!-- <el-form-item label="Facebook">
           <el-button type="success" plain @click="connectFacebook" v-if="!form.facebook">Connect</el-button>
           <el-button type="danger" plain @click="disconnectFacebook" v-if="form.facebook">Disconnect</el-button>
-        </el-form-item>
+        </el-form-item> -->
 
         <div class="sw-form-actions">
           <button type="submit" style="display: none"></button>

@@ -12,6 +12,7 @@ export default new Vuex.Store({
   state: {
     token: null,
     auth_endpoint: null,
+    facebook_endpoint: null,
     profile_endpoint: null,
     picture_endpoint: null,
     tasks_endpoint: null
@@ -24,6 +25,10 @@ export default new Vuex.Store({
 
     updateAuthEndpoint (state, value) {
       state.auth_endpoint = value
+    },
+
+    updateFacebookEndpoint (state, value) {
+      state.facebook_endpoint = value
     },
 
     updateProfileEndpoint (state, value) {
@@ -84,6 +89,20 @@ export default new Vuex.Store({
         facebook: 0
       }, {
         headers: { 'Authorization': 'Bearer ' + state.token }
+      })
+    },
+
+    signUpWithFacebook ({ state }, { code, redirect_uri }) {
+      return axios.post(state.facebook_endpoint + '/signin', {
+        code: code,
+        redirect_uri: redirect_uri
+      })
+    },
+
+    signInWithFacebook ({ state }, { code, redirect_uri }) {
+      return axios.post(state.facebook_endpoint + '/signin', {
+        code: code,
+        redirect_uri: redirect_uri
       })
     },
 

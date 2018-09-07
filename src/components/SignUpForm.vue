@@ -4,6 +4,9 @@
       <el-form-item label="Auth URL" prop="auth_endpoint">
         <el-input placeholder="Auth function URL" type="text" v-model="auth_endpoint"></el-input>
       </el-form-item>
+      <el-form-item label="Facebook Auth URL" prop="facebook_endpoint">
+        <el-input placeholder="Facebook function URL" type="text" v-model="facebook_endpoint"></el-input>
+      </el-form-item>
       <el-form-item label="Profile Function URL" prop="profile_endpoint">
         <el-input placeholder="Profile management URL" type="text" v-model="profile_endpoint"></el-input>
       </el-form-item>
@@ -13,6 +16,11 @@
       <el-form-item label="Tasks Function URL" prop="tasks_endpoint">
         <el-input placeholder="Tasks management URL" type="text" v-model="tasks_endpoint"></el-input>
       </el-form-item>
+
+      <div class="sw-form-actions sw-form-actions--facebook">
+        <el-button type="primary" plain @click.prevent="signUpWithFacebook">Sign Up With Facebook</el-button>
+      </div>
+
       <el-form-item label="Your email" prop="email">
         <el-input placeholder="Email" type="email" v-model="form.email"></el-input>
       </el-form-item>
@@ -32,11 +40,14 @@
 </template>
 
 <script>
+import * as config from '@/config'
+
 export default {
   data () {
     return {
       form: {
         auth_endpoint: null,
+        facebook_endpoint: null,
         profile_endpoint: null,
         picture_endpoint: null,
         tasks_endpoint: null,
@@ -48,6 +59,9 @@ export default {
       rules: {
         auth_endpoint: [
           { required: true, message: 'Please enter your auth url', trigger: 'blur' }
+        ],
+        facebook_endpoint: [
+          { required: true, message: 'Please enter your facebook function url', trigger: 'blur' }
         ],
         profile_endpoint: [
           { required: true, message: 'Please enter your profile function url', trigger: 'blur' }
@@ -77,6 +91,16 @@ export default {
       set (value) {
         this.form.auth_endpoint = value
         this.$store.commit('updateAuthEndpoint', value)
+      }
+    },
+
+    facebook_endpoint: {
+      get () {
+        return this.$store.state.facebook_endpoint
+      },
+      set (value) {
+        this.form.facebook_endpoint = value
+        this.$store.commit('updateFacebookEndpoint', value)
       }
     },
 
@@ -113,9 +137,24 @@ export default {
 
   created () {
     this.form.auth_endpoint = this.auth_endpoint
+    this.form.facebook_endpoint = this.facebook_endpoint
     this.form.profile_endpoint = this.profile_endpoint
     this.form.picture_endpoint = this.picture_endpoint
     this.form.tasks_endpoint = this.tasks_endpoint
+
+    if ('code' in this.$route.query) {
+      this.$store.dispatch('signUpWithFacebook', {
+        code: this.$route.query.code,
+        redirect_uri: encodeURIComponent(window.location.origin + window.location.pathname)
+      }).then(response => {
+        this.$store.commit('updateToken', response.data.token)
+        return this.$store.dispatch('createProfile', {
+          email: response.data.email
+        })
+      }).then(() => {
+        this.$router.push({ name: 'profile' })
+      })
+    }
   },
 
   methods: {
@@ -144,6 +183,13 @@ export default {
           })
         }
       })
+    },
+
+    signUpWithFacebook () {
+      const redirect_uri = encodeURIComponent(window.location.origin + window.location.pathname)
+      const url = 'https://www.facebook.com/v3.0/dialog/oauth?client_id=' + config.FACEBOOK_CLIENT_ID + '&redirect_uri=' + redirect_uri + '&scope=email'
+
+      window.location.href = url
     }
   }
 }

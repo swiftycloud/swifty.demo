@@ -76,6 +76,11 @@ body {
         margin-top: 45px;
         text-align: center;
 
+        &.sw-form-actions--facebook {
+          margin-top: 35px;
+          margin-bottom: 35px;
+        }
+
         button {
           width: 256px;
           text-transform: uppercase;
