@@ -33,9 +33,11 @@ import (
 type authResp struct {
 	Error	string	`json:"error,omitempty"`
 	Token	string	`json:"token,omitempty"`
+	Name	string	`json:"name,omitempty"`
+	Email	string	`json:"email,omitempty"`
 }
 
-func doFacebookReq(url string) (map[string]string, error) {
+func doFacebookReq(url string) (map[string]interface{}, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("Error talking to facebook: %s", err.Error())
@@ -49,7 +51,7 @@ func doFacebookReq(url string) (map[string]string, error) {
 		return nil, err
 	}
 
-	var tok map[string]string
+	var tok map[string]interface{}
 
 	err = json.Unmarshal(ts, &tok)
 	if err != nil {
@@ -60,44 +62,64 @@ func doFacebookReq(url string) (map[string]string, error) {
 	return tok, nil
 }
 
-func getCredsFromFacebook(args map[string]string) (string, error) {
-	tok, ok := args["token"]
-	if ok {
-		goto got_token
-	}
-
-	n := strings.ToUpper(os.Getenv("SWIFTY_AUTH_NAME"))
-	url := "https://graph.facebook.com/v3.0/oauth/access_token"
-	url += "?client_id=" + os.Getenv("ACC_FACEBOOK" + n + "_CLIENT")
-	url += "&client_secret=" + os.Getenv("ACC_FACEBOOK" + n + "_SECRET")
-	url += "&code=" + args["code"]
-	url += "&redirect_uri=" + args["redirect_uri"]
-
-	toki, err := doFacebookReq(url)
-	if err != nil {
-		return "", err
-	}
-
-	tok = toki["access-token"]
-got_token:
-	url = "https://graph.facebook.com/v3.0/me"
-	url += "?access_token=" + tok
-	usr, err := doFacebookReq(url)
-	if err != nil {
-		return "", err
-	}
-
-	return usr["id"], nil
+type facebookUserInfo struct {
+	Id	string
+	Name	string
+	Email	string
 }
 
-func doSignin(auth *swifty.AuthCtx, args map[string]string) interface{} {
-	fbid, err := getCredsFromFacebook(args)
+type signinReq struct {
+	Code	string	`json:"code"`
+	URI	string	`json:"redirect_uri"`
+	Token	string	`json:"token"`
+}
+
+func getCredsFromFacebook(rq *signinReq) (*facebookUserInfo, error) {
+	var url string
+
+	if rq.Token == "" {
+		n := strings.ToUpper(os.Getenv("SWIFTY_AUTH_NAME"))
+		url = "https://graph.facebook.com/v3.0/oauth/access_token"
+		url += "?client_id=" + os.Getenv("ACC_FACEBOOK" + n + "_CLIENT")
+		url += "&client_secret=" + os.Getenv("ACC_FACEBOOK" + n + "_SECRET")
+		url += "&code=" + rq.Code
+		url += "&redirect_uri=" + rq.URI
+
+		toki, err := doFacebookReq(url)
+		if err != nil {
+			return nil, err
+		}
+
+		rq.Token = toki["access_token"].(string)
+	}
+
+	url = "https://graph.facebook.com/v3.0/me"
+	url += "?access_token=" + rq.Token
+	url += "&fields=name,email"
+	usr, err := doFacebookReq(url)
+	if err != nil {
+		return nil, err
+	}
+
+	ret := facebookUserInfo{ Id: usr["id"].(string) }
+	if i, ok := usr["name"]; ok {
+		ret.Name = i.(string)
+	}
+	if i, ok := usr["email"]; ok {
+		ret.Email = i.(string)
+	}
+
+	return &ret, nil
+}
+
+func doSignin(auth *swifty.AuthCtx, rq *signinReq) interface{} {
+	fbui, err := getCredsFromFacebook(rq)
 	if err != nil {
 		return &authResp{Error: "Error talking to facebook"}
 	}
 
 	urec := make(map[string]interface{})
-	urec["facebookid"] = fbid
+	urec["facebookid"] = fbui.Id
 	/* XXX Set additional facebbok data here */
 
 	chg := mgo.Change{
@@ -107,31 +129,38 @@ func doSignin(auth *swifty.AuthCtx, args map[string]string) interface{} {
 		ReturnNew: true,
 	}
 
-	_, err = auth.UsersCol.Find(bson.M{"facebookid": fbid}).Apply(chg, &urec)
+	_, err = auth.UsersCol.Find(bson.M{"facebookid": fbui.Id}).Apply(chg, &urec)
 	if err != nil {
 		fmt.Printf("Error signing up: %s", err.Error())
 		return &authResp{Error: "Error signing in"}
 	}
 
-	jwt, err := auth.MakeJWT(map[string]interface{}{ "facebookid": fbid, "cookie": urec["_id"] })
+	jwt, err := auth.MakeJWT(map[string]interface{}{ "facebookid": fbui.Id, "cookie": urec["_id"] })
 	if err != nil {
 		return &authResp{Error: "Error signing in"}
 	}
 
-	return &authResp{Token: jwt}
+	return &authResp{Token: jwt, Name: fbui.Name, Email: fbui.Email}
 }
 
 func Main(req *Request) (interface{}, *Responce) {
+	if req.Method != "POST" || req.Path != "signin" {
+		return "Not found", &Responce{Status: 404}
+	}
+
 	auth, err := swifty.AuthContext()
 	if err != nil {
 		fmt.Println(err)
 		panic("Can't get auth context")
 	}
 
-	switch req.Path {
-	case "signin":
-		return doSignin(auth, req.Args), nil
+	var rq signinReq
+
+	err = json.Unmarshal([]byte(req.Body), &rq)
+	if err != nil {
+		fmt.Println(err)
+		panic("Cannot unmarshal body")
 	}
 
-	return "Invalid action", nil
+	return doSignin(auth, &rq), nil
 }
