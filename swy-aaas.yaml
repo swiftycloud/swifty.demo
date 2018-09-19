@@ -1,0 +1,21 @@
+---
+functions:
+- name: '%name%_um'
+  sources:
+    type: git
+    repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-user-mgmt.go
+  code:
+    lang: golang
+    env:
+    - 'SWIFTY_AUTH_NAME=%name%'
+  mware:
+  - '%name%_jwt'
+  - '%name%_mgo'
+  events:
+  - name: API
+    source: url
+mwares:
+- name: '%name%_jwt'
+  type: authjwt
+- name: '%name%_mgo'
+  type: mongo
