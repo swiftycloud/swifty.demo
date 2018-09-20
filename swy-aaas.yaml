@@ -24,6 +24,19 @@ functions:
   - '%name%_mgo'
   accounts:
   - 'facebook:%name%'
+- name: '%name%.link'
+  sources:
+    type: git
+    repo: https://github.com/swiftycloud/swifty.demo//functions/golang/user-accounts-link.go
+  code:
+    lang: golang
+    env:
+    - 'SWIFTY_AUTH_NAME=%name%'
+  mware:
+  - '%name%_mgo'
+  accounts:
+  - 'facebook:%name%'
+  authctx: '%name%_jwt'
 - name: '%name%.profile'
   sources:
     type: git
@@ -47,6 +60,9 @@ routers:
   - method: POST
     path: signin_fb
     call: '%name%.fb'
+  - method: POST
+    path: link
+    call: '%name%.link'
   - method: POST
     path: leave
     call: '%name%.base'
