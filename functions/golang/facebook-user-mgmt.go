@@ -144,7 +144,7 @@ func doSignin(auth *swifty.AuthCtx, rq *signinReq) interface{} {
 }
 
 func Main(req *Request) (interface{}, *Responce) {
-	if req.Method != "POST" || req.Path != "signin" {
+	if req.Method != "POST" || req.Path != "signin_fb" {
 		return "Not found", &Responce{Status: 404}
 	}
 
