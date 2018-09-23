@@ -45,3 +45,7 @@ files:
           path: "functions/python/todo-app.py"
           lang: "python"
           desc: "Sample TODO app with the ability to add/del, list and modify simple TODO entries"
+        - name: "Deployment Example"
+          path: "swy-aaas.yaml"
+          lang: "deployment"
+          desc: "Sample deployment"
