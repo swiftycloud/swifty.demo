@@ -1,0 +1,20 @@
+---
+functions:
+- name: '%name%'
+  sources:
+    type: git
+    repo: https://github.com/swiftycloud/swifty.demo//functions/golang/chat.go
+  code:
+    lang: golang
+    env:
+    - 'CHAT_NAME=%name%_ws'
+  mware:
+  - '%name%_ws'
+  events:
+  - source: "websocket",
+    websocket:
+      name: '%name%_ws'
+  - source: "url"
+mwares:
+- name: '%name%_ws'
+  type: websocket
