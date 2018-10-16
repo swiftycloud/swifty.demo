@@ -1,0 +1,46 @@
+---
+functions:
+- name: '%name%.base'
+  sources:
+    type: git
+    repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-user-mgmt.go
+  code:
+    lang: golang
+    env:
+    - 'SWIFTY_AUTH_NAME=%name%'
+  mware:
+  - '%name%_jwt'
+  - '%name%_mgo'
+- name: '%name%.profile'
+  sources:
+    type: git
+    repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-profile-mgmt.go
+  code:
+    lang: golang
+    env:
+    - 'SWIFTY_AUTH_NAME=%name%'
+  mware:
+  - '%name%_profiles'
+  authctx: '%name%_jwt'
+routers:
+- name: '%name%'
+  table:
+  - method: POST
+    path: signup
+    call: '%name%.base'
+  - method: POST
+    path: signin
+    call: '%name%.base'
+  - method: POST
+    path: leave
+    call: '%name%.base'
+  - method: '*'
+    path: profile
+    call: '%name%.profile'
+mwares:
+- name: '%name%_jwt'
+  type: authjwt
+- name: '%name%_mgo'
+  type: mongo
+- name: '%name%_profiles'
+  type: mongo
