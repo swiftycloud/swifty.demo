@@ -1,0 +1,16 @@
+---
+functions:
+- name: '%name%'
+  sources:
+    type: git
+    repo: https://github.com/swiftycloud/swifty.demo//functions/python/todo-app.py
+  code:
+    lang: python
+  mware:
+  - 'tasks'
+  events:
+  - source: "url"
+  authctx: '%auth%'
+mwares:
+- name: 'tasks'
+  type: mongo
