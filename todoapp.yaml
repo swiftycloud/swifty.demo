@@ -1,4 +1,7 @@
 ---
+include:
+- type: repo
+  repo: https://github.com/swiftycloud/swifty.demo//swy-aaas-tiny.yaml
 functions:
 - name: '%name%'
   sources:
@@ -9,7 +12,7 @@ functions:
   mware:
   - 'tasks'
   events:
-  - source: "url"
+  - source: url
   authctx: '%auth%'
 mwares:
 - name: 'tasks'
