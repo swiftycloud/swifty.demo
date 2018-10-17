@@ -13,7 +13,7 @@ functions:
   - 'tasks'
   events:
   - source: url
-  authctx: '%auth%'
+  authctx: '%name%_jwt'
 mwares:
 - name: 'tasks'
   type: mongo
