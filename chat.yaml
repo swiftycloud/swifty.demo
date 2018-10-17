@@ -1,4 +1,7 @@
 ---
+include:
+- type: repo
+  repo: https://github.com/swiftycloud/swifty.demo//swy-aaas-tiny.yaml
 functions:
 - name: '%name%'
   sources:
@@ -11,10 +14,9 @@ functions:
   mware:
   - '%name%_ws'
   events:
-  - source: "websocket",
+  - source: websocket
     websocket:
       name: '%name%_ws'
-  - source: "url"
 mwares:
 - name: '%name%_ws'
   type: websocket
