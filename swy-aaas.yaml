@@ -11,6 +11,8 @@ functions:
   mware:
   - '%name%_jwt'
   - '%name%_mgo'
+  events:
+  - source: url
 - name: '%name%.fb'
   sources:
     type: git
@@ -24,6 +26,8 @@ functions:
   - '%name%_mgo'
   accounts:
   - 'facebook:%name%'
+  events:
+  - source: url
 - name: '%name%.link'
   sources:
     type: git
@@ -37,6 +41,8 @@ functions:
   accounts:
   - 'facebook:%name%'
   authctx: '%name%_jwt'
+  events:
+  - source: url
 - name: '%name%.profile'
   sources:
     type: git
@@ -44,31 +50,12 @@ functions:
   code:
     lang: golang
     env:
-    - 'SWIFTY_AUTH_NAME=%name%'
+    - 'PROFILES=%name%_profiles'
   mware:
   - '%name%_profiles'
   authctx: '%name%_jwt'
-routers:
-- name: '%name%'
-  table:
-  - method: POST
-    path: signup
-    call: '%name%.base'
-  - method: POST
-    path: signin
-    call: '%name%.base'
-  - method: POST
-    path: signin_fb
-    call: '%name%.fb'
-  - method: POST
-    path: link
-    call: '%name%.link'
-  - method: POST
-    path: leave
-    call: '%name%.base'
-  - method: '*'
-    path: profile
-    call: '%name%.profile'
+  events:
+  - source: url
 mwares:
 - name: '%name%_jwt'
   type: authjwt

@@ -4,11 +4,12 @@
  * How to use:
  *
  * 1. Create authentication-as-a-service
- * 2. Create "profiles" middleware of type mongo
+ * 2. Create middleware of type mongo
  * 3. Register and configure this function
  *    - add call authentication from step 1
- *    - add "profiles" middleware from step 2
+ *    - add middleware from step 2
  *    - add "url" event trigger (of any name)
+ *    - add PROFILES environment with the mware name
  *
  * Now your users can have their profiles, but prior to this
  * they need to authenticate
@@ -38,8 +39,10 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"swifty"
+	"strings"
 	"encoding/json"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -49,7 +52,8 @@ func pError(err string) map[string]string {
 }
 
 func Main(rq *Request) (interface{}, *Responce) {
-	db, err := swifty.MongoDatabase("profiles")
+	dbname := strings.ToUpper(os.Getenv("PROFILES"))
+	db, err := swifty.MongoDatabase(dbname)
 	if err != nil {
 		fmt.Println(err)
 		panic("Can't get mgo dbase")
