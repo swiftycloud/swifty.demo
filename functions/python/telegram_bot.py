@@ -3,8 +3,7 @@ import os
 import sys
 import requests
 
-TOKEN = '653041643:AAFYtZOS4-OLP2uzMSnUBFHHTKXUzmyvRhU'
-BASE_URL = "https://api.telegram.org/bot{}".format(TOKEN)
+BASE_URL = "https://api.telegram.org/bot{}".format(os.getenv('ACC_TELEGRAMSWIFTYBOT_TOKEN'))
 
 def Main(req):
     try:

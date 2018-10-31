@@ -39,22 +39,23 @@ def Main(req):
     addr = os.getenv('MWARE_S3IMAGES_ADDR')
     akey = os.getenv('MWARE_S3IMAGES_KEY')
     asec = os.getenv('MWARE_S3IMAGES_SECRET')
+    bucket_name = os.getenv('BUCKET_NAME')
 
     s3 = boto3.session.Session().client(service_name = 's3',
             aws_access_key_id = akey, aws_secret_access_key = asec, endpoint_url = 'https://' + addr + '/')
 
     if req.method == 'POST':
         body = base64.b64decode(req.body)
-        s3.put_object(Bucket = 'images', Key = req.claims['cookie'], Body = body)
+        s3.put_object(Bucket = bucket_name, Key = req.claims['cookie'], Body = body)
         return 'OK', None
 
     if req.method == 'GET':
-        resp = s3.get_object(Bucket = 'images', Key = req.claims['cookie'])
+        resp = s3.get_object(Bucket = bucket_name, Key = req.claims['cookie'])
         body = base64.b64encode(resp['Body'].read()).decode('utf-8')
         return { 'img': body }, None
 
     if req.method == 'DELETE':
-        s3.delete_object(Bucket = 'images', Key = req.claims['cookie'])
+        s3.delete_object(Bucket = bucket_name, Key = req.claims['cookie'])
         return 'OK', None
 
     return 'ERROR', { 'status': 503 }

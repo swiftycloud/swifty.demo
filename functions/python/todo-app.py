@@ -20,7 +20,7 @@ def fromTask(body, q):
         q['task'] = b['task']
 
 def Main(req):
-    db = swifty.MongoDatabase('tasks')
+    db = swifty.MongoDatabase(os.getenv('TASKS_DB_NAME'))
     col = db['tasks']
 
     p = req.path.split('/')
