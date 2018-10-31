@@ -48,4 +48,4 @@ files:
         - name: "Authentication-as-a-Service"
           path: "swy-aaas.yaml"
           lang: "deployment"
-          desc: "Sample deployment"
+          desc: "Authentication-as-a-Service with JWT tokens, Facebook auth and profile management"
