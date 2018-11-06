@@ -2,7 +2,6 @@
 functions:
 - name: '%name%.base'
   sources:
-    type: git
     repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-user-mgmt.go
   code:
     lang: golang
@@ -12,10 +11,9 @@ functions:
   - '%name%_jwt'
   - '%name%_mgo'
   events:
-  - source: url
+  - url: auto
 - name: '%name%.fb'
   sources:
-    type: git
     repo: https://github.com/swiftycloud/swifty.demo//functions/golang/facebook-user-mgmt.go
   code:
     lang: golang
@@ -27,10 +25,9 @@ functions:
   accounts:
   - 'facebook:%name%'
   events:
-  - source: url
+  - url: auto
 - name: '%name%.link'
   sources:
-    type: git
     repo: https://github.com/swiftycloud/swifty.demo//functions/golang/user-accounts-link.go
   code:
     lang: golang
@@ -42,10 +39,9 @@ functions:
   - 'facebook:%name%'
   authctx: '%name%_jwt'
   events:
-  - source: url
+  - url: auto
 - name: '%name%.profile'
   sources:
-    type: git
     repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-profile-mgmt.go
   code:
     lang: golang
@@ -55,7 +51,7 @@ functions:
   - '%name%_profiles'
   authctx: '%name%_jwt'
   events:
-  - source: url
+  - url: auto
 mwares:
 - name: '%name%_jwt'
   type: authjwt

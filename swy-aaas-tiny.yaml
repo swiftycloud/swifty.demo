@@ -2,7 +2,6 @@
 functions:
 - name: '%name%.base'
   sources:
-    type: git
     repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-user-mgmt.go
   code:
     lang: golang
@@ -13,7 +12,6 @@ functions:
   - '%name%_mgo'
 - name: '%name%.profile'
   sources:
-    type: git
     repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-profile-mgmt.go
   code:
     lang: golang

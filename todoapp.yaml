@@ -1,18 +1,14 @@
 ---
 include:
-- type: repo
-  repo: https://github.com/swiftycloud/swifty.demo//swy-aaas-tiny.yaml
+- repo: https://github.com/swiftycloud/swifty.demo//swy-aaas-tiny.yaml
 functions:
 - name: '%name%'
   sources:
-    type: git
     repo: https://github.com/swiftycloud/swifty.demo//functions/python/todo-app.py
-  code:
-    lang: python
   mware:
   - 'tasks'
   events:
-  - source: url
+  - url: auto
   authctx: '%name%_jwt'
 mwares:
 - name: 'tasks'
