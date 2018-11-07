@@ -49,3 +49,7 @@ files:
           path: "swy-aaas.yaml"
           lang: "deployment"
           desc: "Authentication-as-a-Service with JWT tokens, Facebook auth and profile management"
+        - name: "Serverless chat with websockets"
+          path: "chat.yaml"
+          lang: "deployment"
+          desc: "Chat that uses websockets"
