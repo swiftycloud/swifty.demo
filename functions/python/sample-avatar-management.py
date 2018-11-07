@@ -36,10 +36,11 @@ import json
 import base64
 
 def Main(req):
-    addr = os.getenv('MWARE_S3IMAGES_ADDR')
-    akey = os.getenv('MWARE_S3IMAGES_KEY')
-    asec = os.getenv('MWARE_S3IMAGES_SECRET')
     bucket_name = os.getenv('BUCKET_NAME')
+    mwn = bucket_name.upper()
+    addr = os.getenv('MWARE_S3' + mwn + '_ADDR')
+    akey = os.getenv('MWARE_S3' + mwn + '_KEY')
+    asec = os.getenv('MWARE_S3' + mwn + '_SECRET')
 
     s3 = boto3.session.Session().client(service_name = 's3',
             aws_access_key_id = akey, aws_secret_access_key = asec, endpoint_url = 'https://' + addr + '/')
