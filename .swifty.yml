@@ -57,3 +57,7 @@ files:
           path: "functions/golang/chat.go"
           lang: "golang"
           desc: "Chat that uses websockets"
+        - name: "Backend for ToDo application"
+          path: "todoapp.yaml"
+          lang: "deployment"
+          desc: "ToDo app with task, profile and avatar management"
