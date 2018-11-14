@@ -5,6 +5,10 @@ functions:
 - name: '%name%.tasks'
   sources:
     repo: https://github.com/swiftycloud/swifty.demo//functions/python/todo-app.py
+  code:
+    lang: python
+    env:
+    - 'PROFILES=%name%_tasks'
   mware:
   - '%name%_tasks'
   events:
@@ -13,6 +17,8 @@ functions:
 - name: '%name%.avatar'
   sources:
     repo: https://github.com/swiftycloud/swifty.demo//functions/python/sample-avatar-management.py
+  code:
+    lang: python
   events:
   - url: auto
   authctx: '%name%_jwt'
