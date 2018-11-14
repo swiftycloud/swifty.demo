@@ -10,6 +10,8 @@ functions:
   mware:
   - '%name%_jwt'
   - '%name%_mgo'
+  events:
+  - url: auto
 - name: '%name%.profile'
   sources:
     repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-profile-mgmt.go
@@ -19,22 +21,9 @@ functions:
     - 'SWIFTY_AUTH_NAME=%name%'
   mware:
   - '%name%_profiles'
+  events:
+  - url: auto
   authctx: '%name%_jwt'
-routers:
-- name: '%name%'
-  table:
-  - method: POST
-    path: signup
-    call: '%name%.base'
-  - method: POST
-    path: signin
-    call: '%name%.base'
-  - method: POST
-    path: leave
-    call: '%name%.base'
-  - method: '*'
-    path: profile
-    call: '%name%.profile'
 mwares:
 - name: '%name%_jwt'
   type: authjwt
