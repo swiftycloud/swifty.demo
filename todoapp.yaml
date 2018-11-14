@@ -11,5 +11,5 @@ functions:
   - url: auto
   authctx: '%name%_jwt'
 mwares:
-- name: 'tasks'
+- name: '%name%_tasks'
   type: mongo
