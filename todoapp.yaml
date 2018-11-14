@@ -2,11 +2,17 @@
 include:
 - repo: https://github.com/swiftycloud/swifty.demo//swy-aaas-tiny.yaml
 functions:
-- name: '%name%'
+- name: '%name%_tasks'
   sources:
     repo: https://github.com/swiftycloud/swifty.demo//functions/python/todo-app.py
   mware:
-  - 'tasks'
+  - '%name%_tasks'
+  events:
+  - url: auto
+  authctx: '%name%_jwt'
+- name: '%name%_avatar'
+  sources:
+    repo: https://github.com/swiftycloud/swifty.demo//functions/python/sample-avatar-management.py
   events:
   - url: auto
   authctx: '%name%_jwt'
