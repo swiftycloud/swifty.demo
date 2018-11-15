@@ -101,9 +101,9 @@ func getCredsFromFacebook(n string, rq *linkReq) (*facebookUserInfo, error) {
 }
 
 
-func Main(req *Request) (interface{}, *Responce) {
+func Main(req *Request) (interface{}, *Response) {
 	if req.Method != "POST" || req.Path != "link" {
-		return "Not found", &Responce{Status: 404}
+		return "Not found", &Response{Status: 404}
 	}
 
 	aun := strings.ToUpper(os.Getenv("SWIFTY_AUTH_NAME"))

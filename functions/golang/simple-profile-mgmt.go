@@ -51,7 +51,7 @@ func pError(err string) map[string]string {
 	return map[string]string{"status": "error", "error": err}
 }
 
-func Main(rq *Request) (interface{}, *Responce) {
+func Main(rq *Request) (interface{}, *Response) {
 	dbname := strings.ToUpper(os.Getenv("PROFILES"))
 	db, err := swifty.MongoDatabase(dbname)
 	if err != nil {

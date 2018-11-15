@@ -143,9 +143,9 @@ func doSignin(auth *swifty.AuthCtx, rq *signinReq) interface{} {
 	return &authResp{Token: jwt, Name: fbui.Name, Email: fbui.Email}
 }
 
-func Main(req *Request) (interface{}, *Responce) {
+func Main(req *Request) (interface{}, *Response) {
 	if req.Method != "POST" || req.Path != "signin_fb" {
-		return "Not found", &Responce{Status: 404}
+		return "Not found", &Response{Status: 404}
 	}
 
 	auth, err := swifty.AuthContext()
