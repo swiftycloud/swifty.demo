@@ -1,4 +1,6 @@
 ---
+labels:
+  - auth
 functions:
 - name: '%name%.base'
   sources:
