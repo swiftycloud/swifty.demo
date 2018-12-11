@@ -4,7 +4,7 @@ labels:
 functions:
 - name: '%name%.base'
   sources:
-    repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-user-mgmt.go
+    repo: %repo%/functions/golang/simple-user-mgmt.go
   code:
     lang: golang
     env:
@@ -16,7 +16,7 @@ functions:
   - url: auto
 - name: '%name%.profile'
   sources:
-    repo: https://github.com/swiftycloud/swifty.demo//functions/golang/simple-profile-mgmt.go
+    repo: %repo%/functions/golang/simple-profile-mgmt.go
   code:
     lang: golang
     env:
